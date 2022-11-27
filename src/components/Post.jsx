@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { format, formatDistanceToNow } from "date-fns";
 import enUS from "date-fns/locale/en-US";
 
@@ -11,6 +12,20 @@ export function Post({ author, content, publisedAt }) {
     locale: enUS,
     addSuffix: true,
   });
+
+  const [comments, setComments] = useState(["Post muito bacana, hein?"]);
+  const [newCommentText, setnewCommentText] = useState("");
+
+  function handleNewCommentChange(ev) {
+    setnewCommentText(ev.target.value);
+  }
+
+  function handleCreateNewComment(event) {
+    event.preventDefault();
+    const newCommentText = event.target.comment.value;
+    setComments([...comments, newCommentText]);
+    setnewCommentText("");
+  }
 
   return (
     <article className={styles.post}>
@@ -45,18 +60,23 @@ export function Post({ author, content, publisedAt }) {
         })}
       </div>
 
-      <form className={styles.commentForm}>
+      <form onSubmit={handleCreateNewComment} className={styles.commentForm}>
         <strong>Leave your feedback</strong>
-        <textarea placeholder="Leave a comment" />
+        <textarea
+          value={newCommentText}
+          onChange={handleNewCommentChange}
+          name="comment"
+          placeholder="Leave a comment"
+        />
         <footer>
           <button type="submit">Comment</button>
         </footer>
       </form>
 
       <div className={styles.commentList}>
-        <Comment />
-        <Comment />
-        <Comment />
+        {comments.map((comment) => (
+          <Comment content={comment} />
+        ))}
       </div>
     </article>
   );
