@@ -1,8 +1,15 @@
+import { useState } from "react";
 import { ThumbsUp, Trash } from "phosphor-react";
 import styles from "./Comment.module.css";
 import { Avatar } from "./Avatar";
 
 export function Comment({ content, onDeleteComment }) {
+  const [cheersCount, setCheersCount] = useState(0);
+
+  function handleCheerComment() {
+    setCheersCount(cheersCount + 1);
+  }
+
   function handleDeleteComment() {
     onDeleteComment(content);
   }
@@ -26,9 +33,9 @@ export function Comment({ content, onDeleteComment }) {
           <p>{content}</p>
         </div>
         <footer>
-          <button>
+          <button onClick={handleCheerComment}>
             <ThumbsUp />
-            Cheer <span>20</span>
+            Cheer <span>{cheersCount}</span>
           </button>
         </footer>
       </div>

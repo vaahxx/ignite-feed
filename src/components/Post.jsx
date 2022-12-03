@@ -17,7 +17,12 @@ export function Post({ author, content, publisedAt }) {
   const [newCommentText, setnewCommentText] = useState("");
 
   function handleNewCommentChange(ev) {
+    ev.target.setCustomValidity("");
     setnewCommentText(ev.target.value);
+  }
+
+  function handleInvalidNewComment(ev) {
+    ev.target.setCustomValidity("This field is required.");
   }
 
   function handleCreateNewComment(event) {
@@ -27,11 +32,14 @@ export function Post({ author, content, publisedAt }) {
     setnewCommentText("");
   }
 
-  function deleteComment(comment) {
-    console.log("delete comment");
-    const newComments = comments.filter((element) => element !== comment);
-    setComments(newComments);
+  function deleteComment(commentToDelete) {
+    const commentsWithoutDeletedOne = comments.filter(
+      (comment) => comment !== commentToDelete
+    );
+    setComments(commentsWithoutDeletedOne);
   }
+
+  const isNewCommentEmpty = !newCommentText.length;
 
   return (
     <article className={styles.post}>
@@ -73,9 +81,13 @@ export function Post({ author, content, publisedAt }) {
           onChange={handleNewCommentChange}
           name="comment"
           placeholder="Leave a comment"
+          required
+          onInvalid={handleInvalidNewComment}
         />
         <footer>
-          <button type="submit">Comment</button>
+          <button type="submit" disabled={isNewCommentEmpty}>
+            Comment
+          </button>
         </footer>
       </form>
 
