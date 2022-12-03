@@ -1,4 +1,4 @@
-import { Post } from "./components/Post";
+import { Content, Post } from "./components/Post";
 import { Header } from "./components/Header";
 import { Sidebar } from "./components/Sidebar";
 import styles from "./App.module.css";
@@ -13,18 +13,14 @@ const posts = [
       avatarUrl: "https://github.com/vaahxx.png",
     },
     content: [
-      { type: "paragraph", content: "Fala galeraa 👋" },
+      { type: "paragraph", content: "Hey guys 👋" },
       {
         type: "paragraph",
-        content: "Acabei de subir mais um projeto no meu portifa.",
+        content: "I just uploaded a new project on my portfolio.",
       },
       {
         type: "paragraph",
-        content: "É um projeto que fiz no NLW Return, evento da Rocketseat.",
-      },
-      {
-        type: "paragraph",
-        content: "O nome do projeto é DoctorCare 🚀",
+        content: "The project's name is DoctorCare 🚀",
       },
       {
         type: "link",
@@ -41,18 +37,14 @@ const posts = [
       avatarUrl: "https://github.com/vaahxx.png",
     },
     content: [
-      { type: "paragraph", content: "Fala galeraa 👋" },
+      { type: "paragraph", content: "Hey guys 👋" },
       {
         type: "paragraph",
-        content: "Acabei de subir mais um projeto no meu portifa.",
+        content: "I just uploaded a new project on my portfolio.",
       },
       {
         type: "paragraph",
-        content: "É um projeto que fiz no NLW Return, evento da Rocketseat.",
-      },
-      {
-        type: "paragraph",
-        content: "O nome do projeto é DoctorCare 🚀",
+        content: "The project's name is DoctorCare 🚀",
       },
       {
         type: "link",
@@ -74,7 +66,7 @@ export function App() {
             <Post
               key={post.id}
               author={post.author}
-              content={post.content}
+              content={post.content as Content[]}
               publisedAt={post.publisedAt}
             />
           ))}

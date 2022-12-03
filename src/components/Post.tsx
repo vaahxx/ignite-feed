@@ -1,4 +1,4 @@
-import { useState, ChangeEvent, FormEvent, InvalidEvent } from "react";
+import { useState, ChangeEvent, InvalidEvent } from "react";
 import { format, formatDistanceToNow } from "date-fns";
 import enUS from "date-fns/locale/en-US";
 
@@ -12,7 +12,7 @@ interface Author {
   avatarUrl: string;
 }
 
-interface Content {
+export interface Content {
   type: "paragraph" | "link";
   content: string;
 }
@@ -30,11 +30,13 @@ export function Post({ author, content, publisedAt }: PostProps) {
     addSuffix: true,
   });
 
-  const [comments, setComments] = useState(["Post muito bacana, hein?"]);
+  const [comments, setComments] = useState(["Very nice post!"]);
   const [newCommentText, setnewCommentText] = useState("");
 
   function handleNewCommentChange(ev: ChangeEvent<HTMLTextAreaElement>) {
     ev.target.setCustomValidity("");
+    console.log("handleNewCommentChange: event target value");
+    console.log(ev.target.value);
     setnewCommentText(ev.target.value);
   }
 
@@ -42,10 +44,11 @@ export function Post({ author, content, publisedAt }: PostProps) {
     ev.target.setCustomValidity("This field is required.");
   }
 
-  function handleCreateNewComment(ev: FormEvent) {
+  function handleCreateNewComment(ev: React.SyntheticEvent<HTMLFormElement>) {
     ev.preventDefault();
-    const target = ev.target as HTMLTextAreaElement;
-    const newCommentText = target.value;
+    // Why using currentTarget instead of target: https://github.com/DefinitelyTyped/DefinitelyTyped/issues/11508#issuecomment-256045682
+    const target = ev.currentTarget;
+    const newCommentText = target.comment.value;
     setComments([...comments, newCommentText]);
     setnewCommentText("");
   }
