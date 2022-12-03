@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, ChangeEvent, FormEvent, InvalidEvent } from "react";
 import { format, formatDistanceToNow } from "date-fns";
 import enUS from "date-fns/locale/en-US";
 
@@ -6,7 +6,24 @@ import { Comment } from "./Comment";
 import { Avatar } from "./Avatar";
 import styles from "./Post.module.css";
 
-export function Post({ author, content, publisedAt }) {
+interface Author {
+  name: string;
+  role: string;
+  avatarUrl: string;
+}
+
+interface Content {
+  type: "paragraph" | "link";
+  content: string;
+}
+
+interface PostProps {
+  author: Author;
+  publisedAt: Date;
+  content: Content[];
+}
+
+export function Post({ author, content, publisedAt }: PostProps) {
   const publishedDateFormatted = format(publisedAt, "yyyy-MM-dd");
   const publishedDateRelativeToNow = formatDistanceToNow(publisedAt, {
     locale: enUS,
@@ -16,23 +33,24 @@ export function Post({ author, content, publisedAt }) {
   const [comments, setComments] = useState(["Post muito bacana, hein?"]);
   const [newCommentText, setnewCommentText] = useState("");
 
-  function handleNewCommentChange(ev) {
+  function handleNewCommentChange(ev: ChangeEvent<HTMLTextAreaElement>) {
     ev.target.setCustomValidity("");
     setnewCommentText(ev.target.value);
   }
 
-  function handleInvalidNewComment(ev) {
+  function handleInvalidNewComment(ev: InvalidEvent<HTMLTextAreaElement>) {
     ev.target.setCustomValidity("This field is required.");
   }
 
-  function handleCreateNewComment(event) {
-    event.preventDefault();
-    const newCommentText = event.target.comment.value;
+  function handleCreateNewComment(ev: FormEvent) {
+    ev.preventDefault();
+    const target = ev.target as HTMLTextAreaElement;
+    const newCommentText = target.value;
     setComments([...comments, newCommentText]);
     setnewCommentText("");
   }
 
-  function deleteComment(commentToDelete) {
+  function deleteComment(commentToDelete: string) {
     const commentsWithoutDeletedOne = comments.filter(
       (comment) => comment !== commentToDelete
     );
@@ -64,7 +82,7 @@ export function Post({ author, content, publisedAt }) {
         {content.map((item) => {
           if (item.type === "paragraph") {
             return <p key={item.content}>{item.content}</p>;
-          } else if (item === "link") {
+          } else if (item.type === "link") {
             return (
               <p key={item.content}>
                 <a href="#">{item.content}</a>
